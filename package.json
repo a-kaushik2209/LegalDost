@@ -1,0 +1,38 @@
+{
+  "name": "legaldost",
+  "version": "1.0.0",
+  "description": "LegalDost - Your trusted AI-powered legal document analyzer and simplifier",
+  "main": "server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon server.js",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "start": "node server.js",
+    "install-all": "npm install && cd client && npm install",
+    "setup": "node start.js",
+    "check-mongo": "node check-mongodb.js",
+    "setup-mongo-windows": "setup-mongodb-windows.bat",
+    "test-db": "node test-connection.js",
+    "test-ai": "node test-ai.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "axios": "^1.5.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.10.0",
+    "helmet": "^7.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.5.0",
+    "multer": "^1.4.5-lts.1",
+    "pdf-parse": "^1.1.1",
+    "tesseract.js": "^4.1.1"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.1"
+  }
+}

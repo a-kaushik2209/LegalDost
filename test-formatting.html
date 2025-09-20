@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FormattedAIResponse Color Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .dark-context {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .light-context {
+            background: white;
+            color: #333;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+        }
+        .bullet-dark {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.95);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 8px 0;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .bullet-light {
+            background: rgba(33, 150, 243, 0.05);
+            color: #333;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 8px 0;
+            border: 1px solid rgba(33, 150, 243, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <h1>FormattedAIResponse Color Test</h1>
+    
+    <h2>Fixed: Dark Context (Summary Card)</h2>
+    <div class="dark-context">
+        <h3>AI Summary</h3>
+        <div class="bullet-dark">
+            • This text should be visible on dark background (white text)
+        </div>
+        <div class="bullet-dark">
+            • Risk assessment shows medium level concerns
+        </div>
+    </div>
+    
+    <h2>Fixed: Light Context (Chat Messages)</h2>
+    <div class="light-context">
+        <h3>Chat Response</h3>
+        <div class="bullet-light">
+            • This text should be visible on light background (dark text)
+        </div>
+        <div class="bullet-light">
+            • Based on the document analysis, here are the key points
+        </div>
+    </div>
+    
+    <h2>Color Scheme Summary</h2>
+    <ul>
+        <li><strong>Summary Cards (Dark):</strong> White text on gradient background</li>
+        <li><strong>Chat Messages (Light):</strong> Dark text on white background</li>
+        <li><strong>Bullet Points:</strong> Contextual background colors</li>
+        <li><strong>Hover Effects:</strong> Enhanced visibility on interaction</li>
+    </ul>
+</body>
+</html>
