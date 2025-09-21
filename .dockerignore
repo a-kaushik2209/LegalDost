@@ -1,16 +1,60 @@
+# Exclude client directory and its contents
 client/
+client/**/*
+
+# Exclude node_modules (will be installed fresh)
 node_modules/
-client/node_modules/
+*/node_modules/
+
+# Exclude git and development files
 .git/
 .gitignore
+.gitattributes
+
+# Exclude documentation
 README.md
 *.md
+DEPLOYMENT_*.md
+VERCEL_*.md
+
+# Exclude environment files (set via Railway dashboard)
 .env
 .env.local
 .env.example
+.env.development
+.env.production
+
+# Exclude development scripts
 deploy-*.js
 fix-*.js
 test-*.js
+start.js
+check-*.js
+
+# Exclude platform-specific files
 *.bat
-Dockerfile
+Procfile
+vercel.json
+railway.toml
+nixpacks.toml
+
+# Exclude Docker files
+Dockerfile*
 .dockerignore
+
+# Exclude logs and temporary files
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Exclude IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Exclude OS files
+.DS_Store
+Thumbs.db
