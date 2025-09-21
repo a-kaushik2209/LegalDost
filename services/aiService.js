@@ -4,6 +4,68 @@ class AIService {
   constructor() {
     this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     this.model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    
+    // Rate limiting and quota management
+    this.requestCount = 0;
+    this.dailyLimit = 45; // Leave some buffer from 50
+    this.lastResetDate = new Date().toDateString();
+    this.retryDelay = 1000; // Start with 1 second delay
+  }
+
+  // Check if we can make a request
+  canMakeRequest() {
+    const today = new Date().toDateString();
+    
+    // Reset counter if it's a new day
+    if (this.lastResetDate !== today) {
+      this.requestCount = 0;
+      this.lastResetDate = today;
+      this.retryDelay = 1000;
+    }
+    
+    return this.requestCount < this.dailyLimit;
+  }
+
+  // Wait before making request to avoid rate limits
+  async waitBeforeRequest() {
+    if (this.requestCount > 0) {
+      console.log(`⏳ Waiting ${this.retryDelay}ms before AI request...`);
+      await new Promise(resolve => setTimeout(resolve, this.retryDelay));
+      
+      // Increase delay for subsequent requests
+      this.retryDelay = Math.min(this.retryDelay * 1.2, 5000);
+    }
+  }
+
+  // Make AI request with error handling
+  async makeAIRequest(prompt) {
+    if (!this.canMakeRequest()) {
+      throw new Error(`Daily AI quota exceeded (${this.dailyLimit} requests). Please try again tomorrow or upgrade your Gemini AI plan.`);
+    }
+
+    await this.waitBeforeRequest();
+    
+    try {
+      this.requestCount++;
+      console.log(`🤖 Making AI request ${this.requestCount}/${this.dailyLimit}`);
+      
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      return response.text();
+      
+    } catch (error) {
+      if (error.status === 429) {
+        // Extract retry delay from error if available
+        const retryMatch = error.message.match(/retry in (\d+(?:\.\d+)?)s/);
+        if (retryMatch) {
+          const retrySeconds = parseFloat(retryMatch[1]);
+          this.retryDelay = Math.max(retrySeconds * 1000, this.retryDelay);
+        }
+        
+        throw new Error(`AI service temporarily unavailable due to quota limits. Please try again in ${Math.ceil(this.retryDelay/1000)} seconds or upgrade your Gemini AI plan for higher limits.`);
+      }
+      throw error;
+    }
   }
 
   async analyzeDocument(text, title = "Legal Document") {
@@ -60,11 +122,8 @@ Focus on Indian legal compliance including:
 Make sure all explanations are in simple English that anyone can understand.
 `;
 
-      const result = await this.model.generateContent(prompt);
-      const response = await result.response;
-      const text_response = response.text();
+      const text_response = await this.makeAIRequest(prompt);
       
-      // Clean up the response to extract JSON
       let jsonStr = text_response;
       if (jsonStr.includes('```json')) {
         jsonStr = jsonStr.split('```json')[1].split('```')[0];
@@ -75,7 +134,6 @@ Make sure all explanations are in simple English that anyone can understand.
       try {
         const analysis = JSON.parse(jsonStr.trim());
         
-        // Validate and set defaults
         analysis.summary = typeof analysis.summary === 'string' ? analysis.summary : "Document analysis completed.";
         analysis.keyPoints = Array.isArray(analysis.keyPoints) ? analysis.keyPoints : [];
         analysis.riskLevel = analysis.riskLevel || "medium";
@@ -86,7 +144,6 @@ Make sure all explanations are in simple English that anyone can understand.
         return analysis;
       } catch (parseError) {
         console.error('JSON parsing error:', parseError);
-        // Fallback to structured response
         return this.createFallbackAnalysis(text_response, text);
       }
       
@@ -116,9 +173,7 @@ Please provide a clear, detailed explanation of this selected text in simple ter
 Keep your explanation concise but comprehensive, and use simple language while maintaining accuracy.
       `;
 
-      const result = await this.model.generateContent(prompt);
-      const response = await result.response;
-      return response.text();
+      return await this.makeAIRequest(prompt);
       
     } catch (error) {
       console.error('AI Text Explanation error:', error);
@@ -158,9 +213,7 @@ Please provide a well-formatted, helpful answer using the following structure:
 Use bullet points, bold headings, and emojis where appropriate. Keep it conversational but well-structured.
 `;
 
-      const result = await this.model.generateContent(contextPrompt);
-      const response = await result.response;
-      return response.text();
+      return await this.makeAIRequest(contextPrompt);
       
     } catch (error) {
       console.error('AI Chat error:', error);
@@ -169,7 +222,6 @@ Use bullet points, bold headings, and emojis where appropriate. Keep it conversa
   }
 
   createFallbackAnalysis(aiResponse, originalText) {
-    // Extract key information from AI response even if JSON parsing failed
     const summary = this.extractSection(aiResponse, 'summary') || 
                    `**Document Overview**
 • This document contains legal terms and conditions that require careful review
@@ -236,7 +288,7 @@ Use bullet points, bold headings, and emojis where appropriate. Keep it conversa
       }
     });
 
-    return highlights.slice(0, 10); // Limit to 10 highlights
+    return highlights.slice(0, 10);
   }
 }
 

@@ -18,15 +18,34 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.use(helmet());
-app.use(cors({
-  origin: [
-    process.env.CLIENT_URL,
-    'https://legaldost-frontend.vercel.app',
-    'https://legaldost-frontend-bjwceajad-aryans-projects-f84ec15d.vercel.app',
-    'http://localhost:3000'
-  ].filter(Boolean),
-  credentials: true
-}));
+// CORS configuration for production
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      process.env.CLIENT_URL,
+      'https://legaldost-frontend.vercel.app',
+      'https://legaldost-frontend-bjwceajad-aryans-projects-f84ec15d.vercel.app',
+      'http://localhost:3000',
+      'http://localhost:3001'
+    ].filter(Boolean);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      console.log('Allowed origins:', allowedOrigins);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
