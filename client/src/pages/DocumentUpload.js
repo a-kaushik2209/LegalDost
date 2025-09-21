@@ -21,7 +21,6 @@ import { motion } from 'framer-motion';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../contexts/NotificationContext';
-import LoadingAnimation from '../components/LoadingAnimation';
 import PremiumLoadingState from '../components/PremiumLoadingState';
 import axios from 'axios';
 
@@ -79,7 +78,6 @@ const DocumentUpload = () => {
       formData.append('document', files[0]);
       formData.append('title', title.trim());
 
-      // Simulate progress
       const progressInterval = setInterval(() => {
         setProgress(prev => Math.min(prev + 10, 90));
       }, 200);
@@ -96,7 +94,6 @@ const DocumentUpload = () => {
       setUploadedDocument(response.data.document);
       showNotification('Document uploaded successfully!', 'success');
 
-      // Start analysis
       setTimeout(() => {
         handleAnalysis(response.data.documentId);
       }, 1000);
@@ -117,7 +114,7 @@ const DocumentUpload = () => {
 
     try {
       await axios.post(`/api/analysis/analyze/${documentId}`);
-      showNotification('🤖 AI Analysis Complete! Document analyzed with Google Gemini AI', 'success');
+      showNotification('AI Analysis Complete! Document analyzed with Google Gemini AI', 'success');
 
       setTimeout(() => {
         navigate(`/document/${documentId}`);

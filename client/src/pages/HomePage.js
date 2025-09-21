@@ -5,9 +5,7 @@ import {
   Typography,
   Button
 } from '@mui/material';
-import {
-  Gavel
-} from '@mui/icons-material';
+
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -44,7 +42,6 @@ const HomePage = () => {
       video.addEventListener('canplay', handleCanPlay);
       video.addEventListener('error', handleError);
 
-      // Force load the video
       video.load();
 
       return () => {
@@ -63,7 +60,6 @@ const HomePage = () => {
       position: 'relative',
       overflow: 'hidden'
     }}>
-      {/* Video Background */}
       <video
         ref={videoRef}
         autoPlay
@@ -104,7 +100,6 @@ const HomePage = () => {
         }}
       />
 
-      {/* Fallback Background */}
       <Box
         sx={{
           position: 'fixed',
@@ -121,7 +116,6 @@ const HomePage = () => {
 
       <HomeNavbar />
 
-      {/* Hero Section */}
       <Box sx={{
         flex: 1,
         display: 'flex',
