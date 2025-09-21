@@ -105,3 +105,4 @@ uploads/
 # Google Cloud credentials
 google-cloud-key.json
 service-account-key.json
+.vercel

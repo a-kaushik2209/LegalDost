@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["nodejs-18_x", "npm"]
+
+[phases.install]
+cmds = ["npm install --only=production --ignore-scripts"]
+
+[phases.build]
+cmds = ["echo 'Backend only - skipping client build'"]
+
+[start]
+cmd = "node server.js"

@@ -1,0 +1,12 @@
+client/
+client/**
+*.md
+.git/
+.gitignore
+README.md
+DEPLOYMENT_*.md
+VERCEL_*.md
+deploy-*.js
+fix-*.js
+test-*.js
+*.bat

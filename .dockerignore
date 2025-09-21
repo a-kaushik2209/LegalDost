@@ -1,0 +1,16 @@
+client/
+node_modules/
+client/node_modules/
+.git/
+.gitignore
+README.md
+*.md
+.env
+.env.local
+.env.example
+deploy-*.js
+fix-*.js
+test-*.js
+*.bat
+Dockerfile
+.dockerignore

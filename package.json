@@ -7,14 +7,17 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "nodemon server.js",
     "client": "cd client && npm start",
-    "build": "cd client && npm run build",
+    "build": "echo 'Backend ready for deployment'",
+    "build:client": "cd client && npm run build",
     "start": "node server.js",
     "install-all": "npm install && cd client && npm install",
     "setup": "node start.js",
     "check-mongo": "node check-mongodb.js",
     "setup-mongo-windows": "setup-mongodb-windows.bat",
     "test-db": "node test-connection.js",
-    "test-ai": "node test-ai.js"
+    "test-ai": "node test-ai.js",
+    "deploy-vercel": "node deploy-vercel.js",
+    "fix-build": "node fix-build-issues.js"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
