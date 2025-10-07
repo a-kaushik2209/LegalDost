@@ -43,7 +43,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchDocuments();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchDocuments = async () => {
     try {
@@ -115,7 +115,6 @@ const Dashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
         >
-          {/* Premium Full-Width Header Section */}
           <Box
             sx={{
               background: 'linear-gradient(135deg, #1a237e 0%, #000051 100%)',

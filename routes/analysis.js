@@ -5,7 +5,6 @@ const aiService = require('../services/aiService');
 
 const router = express.Router();
 
-// Indian legal clauses and regulations for violation detection
 const INDIAN_LEGAL_VIOLATIONS = {
   'unfair_contract_terms': {
     keywords: ['unilateral termination', 'arbitrary changes', 'no refund', 'unlimited liability'],
@@ -29,12 +28,10 @@ const INDIAN_LEGAL_VIOLATIONS = {
   }
 };
 
-// Enhanced violation detection with more comprehensive rules
 const checkViolations = (text, aiAnalysis) => {
   const violations = [];
   const lowerText = text.toLowerCase();
 
-  // Enhanced Indian legal violations
   const violationRules = {
     'unfair_contract_terms': {
       keywords: ['unilateral termination', 'arbitrary changes', 'no refund', 'unlimited liability', 'sole discretion', 'without notice'],
@@ -83,7 +80,6 @@ const checkViolations = (text, aiAnalysis) => {
     });
   });
 
-  // Add AI-detected violations if any
   if (aiAnalysis.violations && aiAnalysis.violations.length > 0) {
     violations.push(...aiAnalysis.violations);
   }
@@ -91,9 +87,6 @@ const checkViolations = (text, aiAnalysis) => {
   return violations;
 };
 
-
-
-// Analyze document
 router.post('/analyze/:documentId', auth, async (req, res) => {
   try {
     const document = await Document.findOne({
@@ -107,19 +100,15 @@ router.post('/analyze/:documentId', auth, async (req, res) => {
 
     console.log(`🤖 Starting AI analysis for document: ${document.title}`);
 
-    // Perform real AI analysis using Gemini
     const aiAnalysis = await aiService.analyzeDocument(document.originalText, document.title);
     
-    // Check for additional legal violations
     const violations = checkViolations(document.originalText, aiAnalysis);
 
-    // Merge AI violations with rule-based violations
     const allViolations = [...new Map(
       [...violations, ...(aiAnalysis.violations || [])]
         .map(v => [v.clause, v])
     ).values()];
 
-    // Update document with comprehensive analysis
     document.analysis = {
       summary: aiAnalysis.summary,
       keyPoints: aiAnalysis.keyPoints,
@@ -133,18 +122,17 @@ router.post('/analyze/:documentId', auth, async (req, res) => {
     document.status = 'completed';
     await document.save();
 
-    console.log(`✅ AI analysis completed for document: ${document.title}`);
-    console.log(`📊 Risk Level: ${aiAnalysis.riskLevel}`);
-    console.log(`⚠️  Violations found: ${allViolations.length}`);
+    console.log(`AI analysis completed for document: ${document.title}`);
+    console.log(`Risk Level: ${aiAnalysis.riskLevel}`);
+    console.log(`Violations found: ${allViolations.length}`);
 
     res.json({
       message: 'Analysis completed successfully',
       analysis: document.analysis
     });
   } catch (error) {
-    console.error('❌ Analysis error:', error);
+    console.error('Analysis error:', error);
     
-    // Update document status to failed
     await Document.findByIdAndUpdate(req.params.documentId, { status: 'failed' });
     
     res.status(500).json({ 
@@ -154,7 +142,6 @@ router.post('/analyze/:documentId', auth, async (req, res) => {
   }
 });
 
-// Chat with AI about document
 router.post('/chat/:documentId', auth, async (req, res) => {
   try {
     const { question } = req.body;
@@ -170,16 +157,14 @@ router.post('/chat/:documentId', auth, async (req, res) => {
 
     console.log(`💬 User question: ${question}`);
 
-    // Get real AI response using Gemini
     const answer = await aiService.chatWithDocument(
       document.originalText, 
       question, 
       document.chatHistory
     );
 
-    console.log(`🤖 AI response generated (${answer.length} characters)`);
+    console.log(`AI response generated (${answer.length} characters)`);
 
-    // Save chat history
     document.chatHistory.push({
       question,
       answer,
@@ -190,7 +175,7 @@ router.post('/chat/:documentId', auth, async (req, res) => {
 
     res.json({ answer });
   } catch (error) {
-    console.error('❌ Chat error:', error);
+    console.error('Chat error:', error);
     res.status(500).json({ 
       message: 'Chat failed',
       error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
@@ -198,7 +183,6 @@ router.post('/chat/:documentId', auth, async (req, res) => {
   }
 });
 
-// Get chat history
 router.get('/chat/:documentId', auth, async (req, res) => {
   try {
     const document = await Document.findOne({
@@ -217,7 +201,6 @@ router.get('/chat/:documentId', auth, async (req, res) => {
   }
 });
 
-// Explain selected text endpoint
 router.post('/explain', async (req, res) => {
   try {
     const { text, context, documentType } = req.body;

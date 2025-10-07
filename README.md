@@ -4,7 +4,7 @@ A professional AI-powered legal document analyzer that simplifies complex legal 
 
 ## Features
 
-### 🤖 AI-Powered Analysis
+### AI-Powered Analysis
 - **Document Processing**: Upload PDF, JPG, PNG, or TXT files
 - **Smart Text Extraction**: OCR for images, PDF parsing
 - **AI Summarization**: Clear, simple summaries of complex legal documents
@@ -15,19 +15,19 @@ A professional AI-powered legal document analyzer that simplifies complex legal 
 - **Legal References**: Cites specific Indian laws and acts
 - **Compliance Highlighting**: Red highlights for potential violations with explanations
 
-### 💬 Interactive Chat Interface
+### Interactive Chat Interface
 - **AI Assistant**: Ask questions about your documents
 - **Contextual Responses**: AI understands your document content
 - **Suggested Questions**: Pre-built queries for common legal concerns
 - **Chat History**: Persistent conversation history
 
-### 🎨 Professional UI/UX
+### Professional UI/UX
 - **Modern Design**: Material-UI components with smooth animations
 - **Responsive Layout**: Works on desktop, tablet, and mobile
 - **Loading Animations**: Beautiful loading states and progress indicators
 - **Document Highlighting**: Interactive text highlighting with explanations
 
-### 🔐 Security & Authentication
+### Security & Authentication
 - **User Authentication**: Secure login/register system
 - **JWT Tokens**: Secure session management
 - **Private Documents**: Each user can only access their own documents
@@ -170,10 +170,10 @@ npm start
 - **Personal Data Protection Bill** - Data handling issues
 
 ### Highlighting System
-- 🔴 **Red Border**: Legal violations
-- 🟡 **Yellow**: Warnings and cautions
-- 🔵 **Blue**: Important terms and clauses
-- 🟣 **Purple**: Clarifications and explanations
+- **Red Border**: Legal violations
+- **Yellow**: Warnings and cautions
+- **Blue**: Important terms and clauses
+- **Purple**: Clarifications and explanations
 
 ## Security Features
 

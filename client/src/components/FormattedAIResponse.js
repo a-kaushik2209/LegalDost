@@ -3,13 +3,11 @@ import { Box, Typography, Chip, Divider } from '@mui/material';
 import { motion } from 'framer-motion';
 
 const FormattedAIResponse = ({ content, type = 'summary' }) => {
-  // Determine if this is being used in a dark context (like the summary card) or light context (like chat)
   const isDarkContext = type === 'summary';
   const textColor = isDarkContext ? 'rgba(255,255,255,0.95)' : 'text.primary';
   const backgroundColor = isDarkContext ? 'rgba(255,255,255,0.1)' : 'rgba(33, 150, 243, 0.05)';
   const borderColor = isDarkContext ? 'rgba(255,255,255,0.2)' : 'rgba(33, 150, 243, 0.2)';
   const hoverBackgroundColor = isDarkContext ? 'rgba(255,255,255,0.2)' : 'rgba(33, 150, 243, 0.1)';
-  // Parse and format the AI response
   const formatContent = (text) => {
     if (!text) return [];
 
@@ -22,9 +20,7 @@ const FormattedAIResponse = ({ content, type = 'summary' }) => {
     lines.forEach((line, index) => {
       const trimmedLine = line.trim();
       
-      // Check for headings (lines with ** or starting with #)
       if (trimmedLine.match(/^\*\*(.*?)\*\*/) || trimmedLine.startsWith('#')) {
-        // Save previous section
         if (currentSection) {
           sections.push({
             ...currentSection,
@@ -41,7 +37,6 @@ const FormattedAIResponse = ({ content, type = 'summary' }) => {
         };
         currentItems = [];
       }
-      // Check for bullet points
       else if (trimmedLine.match(/^[-*•]\s/) || trimmedLine.match(/^\d+\.\s/)) {
         const item = trimmedLine.replace(/^[-*•]\s/, '').replace(/^\d+\.\s/, '');
         currentItems.push({
@@ -49,14 +44,12 @@ const FormattedAIResponse = ({ content, type = 'summary' }) => {
           content: item
         });
       }
-      // Check for important notes (lines with keywords)
       else if (trimmedLine.match(/\b(important|note|warning|caution|attention)\b/i)) {
         currentItems.push({
           type: 'important',
           content: trimmedLine
         });
       }
-      // Regular paragraph
       else if (trimmedLine.length > 0) {
         currentItems.push({
           type: 'paragraph',
@@ -65,14 +58,12 @@ const FormattedAIResponse = ({ content, type = 'summary' }) => {
       }
     });
 
-    // Add the last section
     if (currentSection) {
       sections.push({
         ...currentSection,
         items: [...currentItems]
       });
     } else if (currentItems.length > 0) {
-      // If no headings found, treat as single section
       sections.push({
         type: 'content',
         items: [...currentItems]

@@ -3,68 +3,35 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 class AIService {
   constructor() {
     this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    this.model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    
-    // Rate limiting and quota management
-    this.requestCount = 0;
-    this.dailyLimit = 45; // Leave some buffer from 50
-    this.lastResetDate = new Date().toDateString();
-    this.retryDelay = 1000; // Start with 1 second delay
+    // Use the latest available Gemini model
+    this.model = this.genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
   }
 
-  // Check if we can make a request
-  canMakeRequest() {
-    const today = new Date().toDateString();
-    
-    // Reset counter if it's a new day
-    if (this.lastResetDate !== today) {
-      this.requestCount = 0;
-      this.lastResetDate = today;
-      this.retryDelay = 1000;
-    }
-    
-    return this.requestCount < this.dailyLimit;
-  }
-
-  // Wait before making request to avoid rate limits
-  async waitBeforeRequest() {
-    if (this.requestCount > 0) {
-      console.log(`⏳ Waiting ${this.retryDelay}ms before AI request...`);
-      await new Promise(resolve => setTimeout(resolve, this.retryDelay));
-      
-      // Increase delay for subsequent requests
-      this.retryDelay = Math.min(this.retryDelay * 1.2, 5000);
-    }
-  }
-
-  // Make AI request with error handling
+  // Make AI request with basic error handling (no rate limiting)
   async makeAIRequest(prompt) {
-    if (!this.canMakeRequest()) {
-      throw new Error(`Daily AI quota exceeded (${this.dailyLimit} requests). Please try again tomorrow or upgrade your Gemini AI plan.`);
-    }
-
-    await this.waitBeforeRequest();
-    
     try {
-      this.requestCount++;
-      console.log(`🤖 Making AI request ${this.requestCount}/${this.dailyLimit}`);
+      console.log('🤖 Making AI request...');
       
       const result = await this.model.generateContent(prompt);
       const response = await result.response;
       return response.text();
-      
+
     } catch (error) {
+      console.error('AI Request Error:', error);
+      
       if (error.status === 429) {
-        // Extract retry delay from error if available
-        const retryMatch = error.message.match(/retry in (\d+(?:\.\d+)?)s/);
-        if (retryMatch) {
-          const retrySeconds = parseFloat(retryMatch[1]);
-          this.retryDelay = Math.max(retrySeconds * 1000, this.retryDelay);
-        }
-        
-        throw new Error(`AI service temporarily unavailable due to quota limits. Please try again in ${Math.ceil(this.retryDelay/1000)} seconds or upgrade your Gemini AI plan for higher limits.`);
+        throw new Error('AI service is temporarily busy. Please try again in a few moments.');
       }
-      throw error;
+      
+      if (error.status === 401) {
+        throw new Error('AI service authentication failed. Please check your API key configuration.');
+      }
+      
+      if (error.status === 403) {
+        throw new Error('AI service access denied. Please check your API key permissions.');
+      }
+      
+      throw new Error(`AI service error: ${error.message || 'Unknown error occurred'}`);
     }
   }
 
@@ -123,30 +90,38 @@ Make sure all explanations are in simple English that anyone can understand.
 `;
 
       const text_response = await this.makeAIRequest(prompt);
-      
+
       let jsonStr = text_response;
       if (jsonStr.includes('```json')) {
         jsonStr = jsonStr.split('```json')[1].split('```')[0];
       } else if (jsonStr.includes('```')) {
         jsonStr = jsonStr.split('```')[1];
       }
-      
+
       try {
-        const analysis = JSON.parse(jsonStr.trim());
+        // Clean up the JSON string to handle control characters
+        const cleanJsonStr = jsonStr.trim()
+          .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
+          .replace(/\n/g, '\\n') // Escape newlines
+          .replace(/\r/g, '\\r') // Escape carriage returns
+          .replace(/\t/g, '\\t'); // Escape tabs
         
+        const analysis = JSON.parse(cleanJsonStr);
+
         analysis.summary = typeof analysis.summary === 'string' ? analysis.summary : "Document analysis completed.";
         analysis.keyPoints = Array.isArray(analysis.keyPoints) ? analysis.keyPoints : [];
         analysis.riskLevel = analysis.riskLevel || "medium";
         analysis.highlights = Array.isArray(analysis.highlights) ? analysis.highlights : [];
         analysis.violations = Array.isArray(analysis.violations) ? analysis.violations : [];
         analysis.recommendations = Array.isArray(analysis.recommendations) ? analysis.recommendations : [];
-        
+
         return analysis;
       } catch (parseError) {
         console.error('JSON parsing error:', parseError);
+        console.log('Raw AI response:', text_response);
         return this.createFallbackAnalysis(text_response, text);
       }
-      
+
     } catch (error) {
       console.error('AI Analysis error:', error);
       throw new Error('Failed to analyze document with AI');
@@ -174,7 +149,7 @@ Keep your explanation concise but comprehensive, and use simple language while m
       `;
 
       return await this.makeAIRequest(prompt);
-      
+
     } catch (error) {
       console.error('AI Text Explanation error:', error);
       throw new Error('Failed to explain text with AI');
@@ -214,7 +189,7 @@ Use bullet points, bold headings, and emojis where appropriate. Keep it conversa
 `;
 
       return await this.makeAIRequest(contextPrompt);
-      
+
     } catch (error) {
       console.error('AI Chat error:', error);
       throw new Error('Failed to get AI response');
@@ -222,8 +197,8 @@ Use bullet points, bold headings, and emojis where appropriate. Keep it conversa
   }
 
   createFallbackAnalysis(aiResponse, originalText) {
-    const summary = this.extractSection(aiResponse, 'summary') || 
-                   `**Document Overview**
+    const summary = this.extractSection(aiResponse, 'summary') ||
+      `**Document Overview**
 • This document contains legal terms and conditions that require careful review
 • Multiple clauses may impact your rights and obligations
 
@@ -233,9 +208,9 @@ Use bullet points, bold headings, and emojis where appropriate. Keep it conversa
 
 **Recommendation**
 • Consider consulting with a legal professional for detailed analysis`;
-    
+
     const riskLevel = aiResponse.toLowerCase().includes('high risk') ? 'high' :
-                     aiResponse.toLowerCase().includes('low risk') ? 'low' : 'medium';
+      aiResponse.toLowerCase().includes('low risk') ? 'low' : 'medium';
 
     return {
       summary,
@@ -268,7 +243,7 @@ Use bullet points, bold headings, and emojis where appropriate. Keep it conversa
   extractHighlights(text) {
     const highlights = [];
     const importantTerms = [
-      'termination', 'penalty', 'liability', 'payment', 'refund', 
+      'termination', 'penalty', 'liability', 'payment', 'refund',
       'cancellation', 'breach', 'damages', 'warranty', 'guarantee'
     ];
 

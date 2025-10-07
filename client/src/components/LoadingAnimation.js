@@ -29,12 +29,12 @@ const LoadingAnimation = ({
   useEffect(() => {
     if (showSteps && steps.length > 0) {
       const messages = [
-        "🔍 Extracting text from document...",
-        "🤖 Analyzing with AI...",
-        "⚖️ Checking legal compliance...",
-        "🎯 Identifying key clauses...",
-        "📊 Generating insights...",
-        "✅ Finalizing analysis..."
+        "Extracting text from document...",
+        "Analyzing with AI...",
+        "Checking legal compliance...",
+        "Identifying key clauses...",
+        "Generating insights...",
+        "Finalizing analysis..."
       ];
       
       let messageIndex = 0;

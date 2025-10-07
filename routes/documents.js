@@ -9,7 +9,6 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-// Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = 'uploads/';
@@ -27,7 +26,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB limit
+    fileSize: 10 * 1024 * 1024
   },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|pdf|txt/;
@@ -42,7 +41,6 @@ const upload = multer({
   }
 });
 
-// Extract text from different file types
 const extractText = async (filePath, fileType) => {
   try {
     switch (fileType) {
@@ -67,7 +65,6 @@ const extractText = async (filePath, fileType) => {
   }
 };
 
-// Upload and process document
 router.post('/upload', auth, upload.single('document'), async (req, res) => {
   try {
     if (!req.file) {
@@ -78,10 +75,8 @@ router.post('/upload', auth, upload.single('document'), async (req, res) => {
     const fileType = req.file.mimetype.includes('pdf') ? 'pdf' : 
                     req.file.mimetype.includes('image') ? 'image' : 'text';
 
-    // Extract text from file
     const extractedText = await extractText(req.file.path, fileType);
 
-    // Create document record
     const document = new Document({
       title: title || req.file.originalname,
       originalText: extractedText,
@@ -112,7 +107,6 @@ router.post('/upload', auth, upload.single('document'), async (req, res) => {
   }
 });
 
-// Get user documents
 router.get('/', auth, async (req, res) => {
   try {
     const documents = await Document.find({ owner: req.userId })
@@ -126,7 +120,6 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// Get specific document
 router.get('/:id', auth, async (req, res) => {
   try {
     const document = await Document.findOne({
@@ -145,7 +138,6 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-// Delete document
 router.delete('/:id', auth, async (req, res) => {
   try {
     const document = await Document.findOne({
@@ -157,7 +149,6 @@ router.delete('/:id', auth, async (req, res) => {
       return res.status(404).json({ message: 'Document not found' });
     }
 
-    // Delete file from filesystem
     if (document.filePath && fs.existsSync(document.filePath)) {
       fs.unlinkSync(document.filePath);
     }

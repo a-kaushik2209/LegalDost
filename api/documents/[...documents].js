@@ -14,13 +14,13 @@ const app = express();
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CLIENT_URL || true,
-  credentials: true
+    origin: process.env.CLIENT_URL || true,
+    credentials: true
 }));
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100
+    windowMs: 15 * 60 * 1000,
+    max: 100
 });
 app.use(limiter);
 
@@ -31,21 +31,21 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 let cachedConnection = null;
 
 async function connectToDatabase() {
-  if (cachedConnection) {
-    return cachedConnection;
-  }
+    if (cachedConnection) {
+        return cachedConnection;
+    }
 
-  try {
-    const connection = await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    cachedConnection = connection;
-    return connection;
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    throw error;
-  }
+    try {
+        const connection = await mongoose.connect(process.env.MONGODB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        cachedConnection = connection;
+        return connection;
+    } catch (error) {
+        console.error('MongoDB connection error:', error);
+        throw error;
+    }
 }
 
 // Use document routes
@@ -53,6 +53,6 @@ app.use('/api/documents', documentRoutes);
 
 // Export handler for Vercel
 module.exports = async (req, res) => {
-  await connectToDatabase();
-  return app(req, res);
+    await connectToDatabase();
+    return app(req, res);
 };

@@ -37,7 +37,6 @@ const Navbar = () => {
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
   const isHomePage = location.pathname === '/';
 
-  // Don't show navbar on homepage
   if (isHomePage) {
     return null;
   }

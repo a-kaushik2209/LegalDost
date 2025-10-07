@@ -1,19 +1,16 @@
-#!/usr/bin/env node
-
 const { exec } = require('child_process');
 const os = require('os');
 
-console.log('🔍 Checking MongoDB installation and status...\n');
+console.log('Checking MongoDB installation and status...\n');
 
-// Check if MongoDB is installed
 function checkMongoInstallation() {
   return new Promise((resolve) => {
     exec('mongod --version', (error, stdout) => {
       if (error) {
-        console.log('❌ MongoDB is not installed');
+        console.log('MongoDB is not installed');
         resolve(false);
       } else {
-        console.log('✅ MongoDB is installed');
+        console.log('MongoDB is installed');
         console.log(`   Version: ${stdout.split('\n')[0]}`);
         resolve(true);
       }
@@ -21,7 +18,6 @@ function checkMongoInstallation() {
   });
 }
 
-// Check if MongoDB service is running
 function checkMongoService() {
   return new Promise((resolve) => {
     const platform = os.platform();
@@ -43,24 +39,23 @@ function checkMongoService() {
     
     exec(command, (error, stdout) => {
       if (error || !stdout.includes('running') && !stdout.includes('started') && !stdout.includes('active')) {
-        console.log('❌ MongoDB service is not running');
+        console.log('MongoDB service is not running');
         resolve(false);
       } else {
-        console.log('✅ MongoDB service is running');
+        console.log('MongoDB service is running');
         resolve(true);
       }
     });
   });
 }
 
-// Check MongoDB connection
 function checkMongoConnection() {
   return new Promise((resolve) => {
     exec('mongosh --eval "db.runCommand({ping: 1})" --quiet', (error) => {
       if (error) {
         exec('mongo --eval "db.runCommand({ping: 1})" --quiet', (error2) => {
           if (error2) {
-            console.log('❌ Cannot connect to MongoDB');
+            console.log('Cannot connect to MongoDB');
             resolve(false);
           } else {
             console.log('✅ MongoDB connection successful');
@@ -68,18 +63,17 @@ function checkMongoConnection() {
           }
         });
       } else {
-        console.log('✅ MongoDB connection successful');
+        console.log('MongoDB connection successful');
         resolve(true);
       }
     });
   });
 }
 
-// Provide installation instructions
 function showInstallationInstructions() {
   const platform = os.platform();
   
-  console.log('\n📖 MongoDB Installation Instructions:\n');
+  console.log('\nMongoDB Installation Instructions:\n');
   
   switch (platform) {
     case 'win32':
@@ -112,14 +106,13 @@ function showInstallationInstructions() {
       console.log('Please visit https://docs.mongodb.com/manual/installation/ for installation instructions');
   }
   
-  console.log('\n🌐 Alternative: Use MongoDB Atlas (Cloud)');
+  console.log('\nAlternative: Use MongoDB Atlas (Cloud)');
   console.log('1. Sign up at https://www.mongodb.com/atlas');
   console.log('2. Create a free cluster');
   console.log('3. Get connection string');
   console.log('4. Update MONGODB_URI in .env file');
 }
 
-// Main function
 async function main() {
   const isInstalled = await checkMongoInstallation();
   
@@ -132,7 +125,7 @@ async function main() {
   const canConnect = await checkMongoConnection();
   
   if (!isServiceRunning || !canConnect) {
-    console.log('\n💡 Try starting MongoDB:');
+    console.log('\nTry starting MongoDB:');
     const platform = os.platform();
     
     switch (platform) {
@@ -148,7 +141,7 @@ async function main() {
     }
   }
   
-  console.log('\n🚀 Once MongoDB is running, start the app with: npm run dev');
+  console.log('\nOnce MongoDB is running, start the app with: npm run dev');
 }
 
 main().catch(console.error);

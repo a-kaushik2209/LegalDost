@@ -43,7 +43,7 @@ const DocumentChat = () => {
   useEffect(() => {
     fetchDocument();
     fetchChatHistory();
-  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [id]);
 
   useEffect(() => {
     scrollToBottom();
@@ -143,7 +143,6 @@ const DocumentChat = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Header */}
         <Box display="flex" alignItems="center" mb={3}>
           <IconButton onClick={() => navigate(`/document/${id}`)} sx={{ mr: 2 }}>
             <ArrowBack />
@@ -186,7 +185,6 @@ const DocumentChat = () => {
           height="calc(100vh - 120px)"
           sx={{ flexDirection: { xs: 'column', lg: 'row' } }}
         >
-          {/* Enhanced Chat Area */}
           <Card sx={{ 
             flex: 2, 
             display: 'flex', 
@@ -198,7 +196,6 @@ const DocumentChat = () => {
             boxShadow: '0 20px 60px rgba(26, 35, 126, 0.08)',
             minHeight: { xs: '70vh', lg: '80vh' },
           }}>
-            {/* Enhanced Messages Area */}
             <Box
               sx={{
                 flex: 1,
@@ -266,7 +263,6 @@ const DocumentChat = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      {/* User Message */}
                       <Box display="flex" justifyContent="flex-end" mb={2}>
                         <Box display="flex" alignItems="flex-start" maxWidth="70%">
                           <Paper
@@ -287,7 +283,6 @@ const DocumentChat = () => {
                         </Box>
                       </Box>
 
-                      {/* AI Response */}
                       {message.answer && (
                         <Box display="flex" justifyContent="flex-start" mb={3}>
                           <Box display="flex" alignItems="flex-start" maxWidth="70%">
@@ -421,7 +416,6 @@ const DocumentChat = () => {
             </Box>
           </Card>
 
-          {/* Enhanced Sidebar */}
           <Box 
             flex={1} 
             sx={{ 
@@ -429,7 +423,6 @@ const DocumentChat = () => {
               maxWidth: { xs: '100%', lg: 400 },
             }}
           >
-            {/* Document Info */}
             <Card sx={{ 
               mb: 3,
               minHeight: 200
@@ -482,7 +475,6 @@ const DocumentChat = () => {
               </CardContent>
             </Card>
 
-            {/* Suggested Questions */}
             <Card sx={{ 
               minHeight: 600,
               display: 'flex',

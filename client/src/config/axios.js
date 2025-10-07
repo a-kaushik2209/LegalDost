@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-// Set base URL for API calls
 axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-// Add request interceptor to include auth token
 axios.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -17,7 +15,6 @@ axios.interceptors.request.use(
   }
 );
 
-// Add response interceptor to handle auth errors
 axios.interceptors.response.use(
   (response) => {
     return response;

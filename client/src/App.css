@@ -1,9 +1,7 @@
-/* Import premium fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
 
-/* Global styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -17,7 +15,6 @@
   overflow-x: hidden;
 }
 
-/* Premium legal background pattern */
 .App::before {
   content: '';
   position: fixed;
@@ -33,7 +30,6 @@
   z-index: -1;
 }
 
-/* Legal document pattern overlay */
 .App::after {
   content: '';
   position: fixed;
@@ -58,7 +54,6 @@
   z-index: -1;
 }
 
-/* Premium scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -79,12 +74,10 @@
   background: linear-gradient(135deg, #000051 0%, #1a237e 100%);
 }
 
-/* Smooth transitions for all elements */
 * {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Premium text selection */
 ::selection {
   background: rgba(26, 35, 126, 0.15);
   color: inherit;
@@ -95,7 +88,6 @@
   color: inherit;
 }
 
-/* Enhanced premium animations */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -187,7 +179,6 @@
   }
 }
 
-/* Utility animation classes */
 .fade-in-up {
   animation: fadeInUp 0.6s ease-out;
 }
@@ -204,7 +195,6 @@
   animation: scaleIn 0.6s ease-out;
 }
 
-/* Premium card hover effects */
 .premium-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -220,7 +210,6 @@
     0 8px 16px rgba(0, 0, 0, 0.08);
 }
 
-/* Legal document styling */
 .legal-document {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -240,7 +229,6 @@
   background: linear-gradient(135deg, #1a237e 0%, #b8860b 100%);
 }
 
-/* Premium gradient backgrounds */
 .gradient-primary {
   background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
 }
@@ -261,7 +249,6 @@
   background: linear-gradient(135deg, #c62828 0%, #f44336 100%);
 }
 
-/* Glass morphism effect */
 .glass-morphism {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
@@ -269,7 +256,6 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-/* Premium loading animations */
 .premium-loading {
   background: linear-gradient(
     90deg,
@@ -311,7 +297,6 @@
 .typing-dot:nth-child(2) { animation-delay: -0.16s; }
 .typing-dot:nth-child(3) { animation-delay: 0s; }
 
-/* Enhanced button styles */
 .btn-premium {
   background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
   border: none;
@@ -350,7 +335,6 @@
   box-shadow: 0 8px 24px rgba(26, 35, 126, 0.3);
 }
 
-/* Legal theme specific styles */
 .legal-header {
   background: linear-gradient(135deg, #1a237e 0%, #000051 100%);
   position: relative;
@@ -370,7 +354,6 @@
   pointer-events: none;
 }
 
-/* Status indicators */
 .status-success {
   background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
   color: white;
@@ -398,7 +381,6 @@
   font-weight: 600;
 }
 
-/* Full-width premium layout */
 .full-width-container {
   width: 100%;
   max-width: none;
@@ -419,7 +401,6 @@
   transform: translateY(-2px);
 }
 
-/* Enhanced typography */
 .premium-heading {
   font-family: 'Playfair Display', serif;
   font-weight: 700;
@@ -442,7 +423,6 @@
   font-weight: 500;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
   .App {
     padding: 0;
@@ -465,7 +445,6 @@
   }
 }
 
-/* Ultra-wide screen support */
 @media (min-width: 1920px) {
   .container-ultra-wide {
     max-width: 1600px;
@@ -473,18 +452,15 @@
   }
 }
 
-/* Focus styles for accessibility */
 *:focus {
   outline: 2px solid rgba(26, 35, 126, 0.5);
   outline-offset: 2px;
 }
 
-/* Remove default focus for mouse users */
 *:focus:not(:focus-visible) {
   outline: none;
 }
 
-/* High contrast mode support */
 @media (prefers-contrast: high) {
   .App {
     background: #ffffff;

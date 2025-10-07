@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 require('dotenv').config();
 const aiService = require('./services/aiService');
 
@@ -26,21 +24,21 @@ By signing below, tenant waives all rights to dispute resolution.
 `;
 
 async function testAI() {
-  console.log('🧪 Testing AI Integration...\n');
+  console.log('Testing AI Integration...\n');
   
   try {
-    console.log('📄 Analyzing test rental agreement...');
+    console.log('Analyzing test rental agreement...');
     const analysis = await aiService.analyzeDocument(testDocument, "Test Rental Agreement");
     
-    console.log('\n✅ AI Analysis Results:');
-    console.log('📊 Risk Level:', analysis.riskLevel);
-    console.log('📝 Summary:', typeof analysis.summary === 'string' ? analysis.summary.substring(0, 100) + '...' : 'Summary available');
-    console.log('🎯 Key Points:', analysis.keyPoints.length);
-    console.log('⚠️  Violations:', analysis.violations?.length || 0);
-    console.log('💡 Recommendations:', analysis.recommendations?.length || 0);
+    console.log('\nAI Analysis Results:');
+    console.log('Risk Level:', analysis.riskLevel);
+    console.log('Summary:', typeof analysis.summary === 'string' ? analysis.summary.substring(0, 100) + '...' : 'Summary available');
+    console.log('Key Points:', analysis.keyPoints.length);
+    console.log(' Violations:', analysis.violations?.length || 0);
+    console.log('Recommendations:', analysis.recommendations?.length || 0);
     
     if (analysis.violations && analysis.violations.length > 0) {
-      console.log('\n🚨 Legal Violations Found:');
+      console.log('\nLegal Violations Found:');
       analysis.violations.forEach((violation, index) => {
         console.log(`${index + 1}. ${violation.clause}`);
         console.log(`   Severity: ${violation.severity}`);
@@ -48,29 +46,29 @@ async function testAI() {
       });
     }
     
-    console.log('\n💬 Testing AI Chat...');
+    console.log('\nTesting AI Chat...');
     const chatResponse = await aiService.chatWithDocument(
       testDocument, 
       "What are the biggest problems with this rental agreement?"
     );
     
-    console.log('🤖 AI Chat Response:', chatResponse.substring(0, 200) + '...');
+    console.log('AI Chat Response:', chatResponse.substring(0, 200) + '...');
     
-    console.log('\n🎉 AI Integration Test Successful!');
-    console.log('✅ Real Gemini AI is working');
-    console.log('✅ Document analysis is functional');
-    console.log('✅ Chat functionality is working');
-    console.log('✅ Legal compliance checking is active');
+    console.log('\nAI Integration Test Successful!');
+    console.log('Real Gemini AI is working');
+    console.log('Document analysis is functional');
+    console.log('Chat functionality is working');
+    console.log('Legal compliance checking is active');
     
   } catch (error) {
-    console.error('❌ AI Test Failed:', error.message);
+    console.error('AI Test Failed:', error.message);
     
     if (error.message.includes('API key')) {
-      console.log('\n💡 Check your GEMINI_API_KEY in .env file');
+      console.log('\ Check your GEMINI_API_KEY in .env file');
     } else if (error.message.includes('quota')) {
-      console.log('\n💡 API quota exceeded - try again later');
+      console.log('\nAPI quota exceeded - try again later');
     } else {
-      console.log('\n💡 Check your internet connection and API key');
+      console.log('\nheck your internet connection and API key');
     }
   }
 }

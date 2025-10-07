@@ -4,11 +4,13 @@
   "description": "LegalDost - Your trusted AI-powered legal document analyzer and simplifier",
   "main": "server.js",
   "scripts": {
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dev": "concurrently \"npm run server\" \"npm run client:local\"",
+    "dev:prod": "concurrently \"npm run server\" \"npm run client\"",
     "server": "nodemon server.js",
     "client": "cd client && npm start",
+    "client:local": "cd client && cp .env.local .env && npm start",
     "build": "echo 'Backend ready for deployment'",
-    "build:client": "cd client && npm run build",
+    "build:client": "cd client && cp .env.production .env && npm run build",
     "start": "node server.js",
     "install-all": "npm install && cd client && npm install",
     "setup": "node start.js",
@@ -16,8 +18,11 @@
     "setup-mongo-windows": "setup-mongodb-windows.bat",
     "test-db": "node test-connection.js",
     "test-ai": "node test-ai.js",
+    "test-ai-simple": "node test-ai-simple.js",
     "deploy-vercel": "node deploy-vercel.js",
-    "fix-build": "node fix-build-issues.js"
+    "fix-build": "node fix-build-issues.js",
+    "switch:local": "cd client && cp .env.local .env",
+    "switch:prod": "cd client && cp .env.production .env"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

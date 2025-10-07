@@ -47,7 +47,6 @@ const PremiumLoadingState = ({
             position: 'relative',
           }}
         >
-          {/* Animated background */}
           <Box
             sx={{
               position: 'absolute',
@@ -61,7 +60,6 @@ const PremiumLoadingState = ({
           />
           
           <CardContent sx={{ p: 6, position: 'relative', zIndex: 1 }}>
-            {/* Main loading indicator */}
             <Box textAlign="center" mb={4}>
               <motion.div
                 animate={{ 
@@ -137,7 +135,6 @@ const PremiumLoadingState = ({
               </Typography>
             </Box>
 
-            {/* Progress bar */}
             {progress !== null && (
               <Box mb={4}>
                 <LinearProgress
@@ -165,7 +162,6 @@ const PremiumLoadingState = ({
               </Box>
             )}
 
-            {/* Analysis steps */}
             <Box>
               <Typography 
                 variant="h6" 
@@ -249,7 +245,6 @@ const PremiumLoadingState = ({
               ))}
             </Box>
 
-            {/* Footer */}
             <Box textAlign="center" mt={4} pt={3} sx={{ borderTop: '1px solid rgba(0,0,0,0.1)' }}>
               <Typography 
                 variant="caption" 

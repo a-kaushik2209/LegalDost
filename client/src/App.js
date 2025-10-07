@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider } from './contexts/AuthContext';
@@ -19,13 +19,13 @@ const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#1a237e', // Deep indigo - professional legal blue
+      main: '#1a237e',
       light: '#534bae',
       dark: '#000051',
       contrastText: '#ffffff',
     },
     secondary: {
-      main: '#b8860b', // Dark goldenrod - premium gold accent
+      main: '#b8860b',
       light: '#f4d03f',
       dark: '#7d5a00',
       contrastText: '#ffffff',
@@ -200,18 +200,6 @@ const theme = createTheme({
   },
 });
 
-
-// Scroll to top component
-function ScrollToTop() {
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
-  return null;
-}
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -219,7 +207,6 @@ function App() {
       <AuthProvider>
         <NotificationProvider>
           <Router>
-            <ScrollToTop />
             <div className="App">
               <Navbar />
               <Routes>
